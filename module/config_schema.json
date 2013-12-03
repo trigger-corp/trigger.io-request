@@ -1,0 +1,14 @@
+{
+	"type": "object",
+	"additionalProperties": false,
+	"properties": {
+		"permissions": {
+			"required": true, 
+			"type": "array", 
+			"description": "Match patterns specifying allows URLs for cross domain requests (not currently used on mobile).", 
+			"items": {
+				"type": "string"
+			}
+		}
+	}
+}
