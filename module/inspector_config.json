@@ -1,7 +1,8 @@
 {
 	"modules": {
-		"request": {
-			"version": "2.0",
+		
+	},
+	"this_module": {
 			"config": {
 				"permissions": [
 					"http://ops.trigger.io/*",
@@ -10,5 +11,4 @@
 				]
 			}
 		}
-	}
 }

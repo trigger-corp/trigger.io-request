@@ -26,7 +26,7 @@
 	
 	[operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
 		[task success:@{
-						@"response": [operation responseString],
+						@"response": [operation responseString] ? [operation responseString] : @"",
 						@"headers": [[operation response] allHeaderFields]
 						}];
 	} failure:^(AFHTTPRequestOperation *operation, NSError *error) {

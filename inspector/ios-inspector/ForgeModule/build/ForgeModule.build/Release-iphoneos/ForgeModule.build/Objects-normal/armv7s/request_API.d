@@ -1,7 +1,7 @@
 dependencies: \
-  /Users/james/Code/modules/request/inspector/ios-inspector/ForgeModule/request_API.m \
-  /Users/james/Code/modules/request/inspector/ios-inspector/ForgeModule/request_API.h \
-  /Users/james/Code/modules/request/inspector/ios-inspector/ForgeModule/AFNetworking/AFNetworking.h \
+  /Users/connor/githubtmp/trigger.io-request/inspector/ios-inspector/ForgeModule/request_API.m \
+  /Users/connor/githubtmp/trigger.io-request/inspector/ios-inspector/ForgeModule/request_API.h \
+  /Users/connor/githubtmp/trigger.io-request/inspector/ios-inspector/ForgeModule/AFNetworking/AFNetworking.h \
   AFNetworking/AFURLConnectionOperation.h \
   AFNetworking/AFHTTPRequestOperation.h \
   AFNetworking/AFJSONRequestOperation.h \
