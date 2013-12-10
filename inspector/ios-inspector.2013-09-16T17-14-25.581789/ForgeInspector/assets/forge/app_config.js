@@ -1,1 +1,0 @@
-window.forge = {}; window.forge.config = {"modules": {"inspector": {"version": "1.0"}, "request": {"version": "2.0", "config": {"permissions": ["http://ops.trigger.io/*", "https://trigger.io/*", "file:///*/*"]}}}};
