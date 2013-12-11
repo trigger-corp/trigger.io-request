@@ -1,8 +1,8 @@
 {
-    "changes": "* Fix bug with raw file uploads on Android.\n* Support array values in `data` parameter when performing a file upload\n* The success callback now receives the response headers as a second positional argument", 
+    "changes": "* Fix crash on iOS 6 if an ajax request returned an empty response", 
     "description": "Make cross domain ajax requests.\n\nThe requests module handles ajax requests using native libraries to prevent cross domain security issues, and allow for file uploads.", 
     "min_platform_version": "v2.1.0", 
     "namespace": "request", 
     "platform_version": "v2.1.0", 
-    "version": "2.3"
+    "version": "2.4"
 }
