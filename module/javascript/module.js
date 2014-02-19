@@ -131,7 +131,12 @@ forge['request']['ajax'] = function (options, success, error) {
 	var dataType = (options.dataType ? options.dataType : null);
 	var headers = (options.headers ? options.headers : {});
 	var timeout = (options.timeout ? options.timeout : 60000);
-	var type = (options.type ? options.type : 'GET');
+	var type = (options.type ? options.type : null);
+	if (!type && files) {
+		type = "POST";
+	} else if (!type) {
+		type = "GET";
+	}
 	var progress = options.progress ? options.progress : null;
 
 	if (typeof accepts === "string") {
@@ -140,7 +145,6 @@ forge['request']['ajax'] = function (options, success, error) {
 	}
 	var boundary = null;
 	if (files) {
-		type = 'POST';
 		if (fileUploadMethod == 'multipart') {
 			boundary = forge.tools.UUID().replace(/-/g,"");
 			data = generateMultipartString(data, boundary);
@@ -153,7 +157,9 @@ forge['request']['ajax'] = function (options, success, error) {
 			}
 			data = null;
 			// XXX: This should probably be set in native code.
-			contentType = "image/jpg";
+			if (!contentType) {
+				contentType = "image/jpg";
+			}
 		}
 	} else {
 		if (type == 'GET') {

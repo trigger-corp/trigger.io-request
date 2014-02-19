@@ -307,9 +307,43 @@ if ("inspector" in forge) {
 		});
 	});
 
+	asyncTest("HTTP File upload with PUT", 1, function() {
+		forge.request.ajax({
+			type: "PUT",
+			url: "http://httpbin.org/put",
+			files: [forge.inspector.getFixture("request", "test.txt")],
+			success: function (data) {
+				data = JSON.parse(data);
+				equal(data.files[0], 'test', "Uploaded value");
+				start();
+			},
+			error: function () {
+				ok(false, "Ajax error callback");
+				start();
+			}
+		});
+	});
+
 	asyncTest("HTTPS File upload", 1, function() {
 		forge.request.ajax({
 			url: "https://httpbin.org/post",
+			files: [forge.inspector.getFixture("request", "test.txt")],
+			success: function (data) {
+				data = JSON.parse(data);
+				equal(data.files[0], 'test', "Uploaded value");
+				start();
+			},
+			error: function () {
+				ok(false, "Ajax error callback");
+				start();
+			}
+		});
+	});
+
+	asyncTest("HTTPS File upload with PUT", 1, function() {
+		forge.request.ajax({
+			type: "PUT",
+			url: "https://httpbin.org/put",
 			files: [forge.inspector.getFixture("request", "test.txt")],
 			success: function (data) {
 				data = JSON.parse(data);
@@ -340,9 +374,45 @@ if ("inspector" in forge) {
 		});
 	});
 
+	asyncTest("HTTP Raw file upload with PUT", 1, function() {
+		forge.request.ajax({
+			type: "PUT",
+			url: "http://httpbin.org/put",
+			files: [forge.inspector.getFixture("request", "test.txt")],
+			fileUploadMethod: "raw",
+			success: function (data) {
+				data = JSON.parse(data);
+				equal(data.data, 'test', "Uploaded value");
+				start();
+			},
+			error: function () {
+				ok(false, "Ajax error callback");
+				start();
+			}
+		});
+	});
+
 	asyncTest("HTTPS Raw file upload", 1, function() {
 		forge.request.ajax({
 			url: "https://httpbin.org/post",
+			files: [forge.inspector.getFixture("request", "test.txt")],
+			fileUploadMethod: "raw",
+			success: function (data) {
+				data = JSON.parse(data);
+				equal(data.data, 'test', "Uploaded value");
+				start();
+			},
+			error: function () {
+				ok(false, "Ajax error callback");
+				start();
+			}
+		});
+	});
+
+	asyncTest("HTTPS Raw file upload with PUT", 1, function() {
+		forge.request.ajax({
+			type: "PUT",
+			url: "https://httpbin.org/put",
 			files: [forge.inspector.getFixture("request", "test.txt")],
 			fileUploadMethod: "raw",
 			success: function (data) {
