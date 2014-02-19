@@ -1,20 +1,47 @@
-.trigger
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+
+# Local configuration file (sdk path, etc)
+local.properties
+xcuserdata
+xcschemes
+
+# Eclipse project files
+.classpath
+.project
+
+# trigger stuff
+.lib/
+.trigger/
 identity.json
-inspector/an-inspector.*
-inspector/ios-inspector.*
 .hash
-inspector/ios-inspector/ForgeInspector
-inspector/ios-inspector/ForgeCore.framework
-inspector/ios-inspector/ForgeInspector.xcodeproj
-inspector/ios-inspector/ForgeCore.bundle
+inspector/an-inspector.*
 inspector/an-inspector/ForgeInspector
-inspector/an-inspector/ForgeModule/.settings
-inspector/an-inspector/ForgeModule/libs
-inspector/an-inspector/ForgeModule/res
-inspector/an-inspector/ForgeModule/trigger-gen
 inspector/an-inspector/ForgeModule/.classpath
 inspector/an-inspector/ForgeModule/.project
+inspector/an-inspector/ForgeModule/.settings
 inspector/an-inspector/ForgeModule/AndroidManifest.xml
+inspector/an-inspector/ForgeModule/libs
 inspector/an-inspector/ForgeModule/project.properties
+inspector/an-inspector/ForgeModule/res
+inspector/an-inspector/ForgeModule/trigger-gen
+inspector/ios-inspector.*
+inspector/ios-inspector/ForgeCore.bundle/
+inspector/ios-inspector/ForgeCore.framework
+inspector/ios-inspector/ForgeInspector
+inspector/ios-inspector/ForgeInspector.xcodeproj
+inspector/ios-inspector/ForgeModule/ForgeModule-Prefix.pch
 inspector/ios-inspector/ForgeModule/build
 inspector/ios-inspector/build
+
