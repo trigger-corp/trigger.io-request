@@ -22,7 +22,7 @@ asyncTest("HTTPS GET", 1, function() {
 		url: "https://httpbin.org/get",
 		success: function (data) {
 			data = JSON.parse(data);
-			equal(data.url, "http://httpbin.org/get");
+			equal(data.url, "https://httpbin.org/get");
 			start();
 		},
 		error: function () {
@@ -54,7 +54,7 @@ asyncTest("HTTPS DELETE", 1, function() {
 		type: "DELETE",
 		success: function (data) {
 			data = JSON.parse(data);
-			equal(data.url, "http://httpbin.org/delete");
+			equal(data.url, "https://httpbin.org/delete");
 			start();
 		},
 		error: function () {

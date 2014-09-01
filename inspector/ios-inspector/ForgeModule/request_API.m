@@ -31,10 +31,10 @@
 						}];
 	} failure:^(AFHTTPRequestOperation *operation, NSError *error) {
 		NSMutableDictionary *errorObj = [[NSMutableDictionary alloc] init];
-		int statusCode = [[operation response] statusCode];
-		[errorObj setValue:[@"HTTP error code received from server: " stringByAppendingString:[NSString stringWithFormat:@"%d", statusCode]] forKey:@"message"];
+		long statusCode = [[operation response] statusCode];
+		[errorObj setValue:[@"HTTP error code received from server: " stringByAppendingString:[NSString stringWithFormat:@"%ld", statusCode]] forKey:@"message"];
 		[errorObj setValue:@"EXPECTED_FAILURE" forKey:@"type"];
-		[errorObj setValue:[NSString stringWithFormat:@"%d", statusCode] forKey:@"statusCode"];
+		[errorObj setValue:[NSString stringWithFormat:@"%ld", statusCode] forKey:@"statusCode"];
 		[errorObj setValue:[operation responseString] forKey:@"content"];
 		[task error:errorObj];
 	}];
@@ -63,7 +63,7 @@
 			if ([params objectForKey:@"files"] && [params objectForKey:@"files"] != [NSNull null]) {
 				NSArray *files = [params objectForKey:@"files"];
 				
-				int __block numfiles = [files count];
+				unsigned long __block numfiles = [files count];
 				int index = -1;
 				
 				for (NSDictionary* file in files) {
@@ -132,7 +132,7 @@
 		NSMutableData *payload = [NSMutableData dataWithLength:0];
 		NSArray *files = [params objectForKey:@"files"];
 		
-		int __block numfiles = [files count];
+		unsigned long __block numfiles = [files count];
 		
 		for (NSDictionary* file in files) {
 			// Handle file
