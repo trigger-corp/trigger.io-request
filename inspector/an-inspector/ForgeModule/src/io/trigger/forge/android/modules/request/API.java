@@ -9,6 +9,7 @@ import io.trigger.forge.android.core.ForgeTask;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
@@ -16,6 +17,7 @@ import java.util.Vector;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpResponseException;
 
 import android.net.Uri;
@@ -58,7 +60,23 @@ public class API {
 		}
 
 		// Link with webkit cookies
-		client.setCookieStore(new WebkitCookieStore(url));
+		CookieStore cookieStore = null;
+		try {
+			// Only available on ForgeCore >= 2.4.1
+			Class forName = Class.forName("io.trigger.forge.android.core.ForgeCookieStore");
+			Constructor<CookieStore> constructor = forName.getConstructor(new Class[] { String.class });
+			cookieStore = constructor.newInstance(new Object[] { url });
+		} catch (ClassNotFoundException e) {
+			ForgeLog.d(e.toString());
+			ForgeLog.d("Could not find ForgeCookieStore, falling back to WebkitCookieStore");
+			cookieStore = new WebkitCookieStore(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ForgeLog.d(e.toString());
+			ForgeLog.d("Could not instantiate ForgeCookieStore, falling back to WebkitCookieStore");
+			cookieStore = new WebkitCookieStore(url);
+		}
+		client.setCookieStore(cookieStore);
 		
 		final String progress = task.params.has("progress") && !task.params.get("progress").isJsonNull() ? task.params.get("progress").getAsString() : null;
 
