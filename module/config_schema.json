@@ -6,7 +6,7 @@
 			"title": "Disable iOS ATS",
 			"type": "boolean",
 			"required": false,
-			"description": "<p>Disables iOS App Transport Security (ATS) for your app.</p><p style='color:red;'>Please note that disabling ATS after 01 January 2017 will cause your app to be rejected during the iOS App Store review process.</p>",
+			"description": "<p>Disable iOS App Transport Security (ATS) for your app.</p><p style='color:red;'>Please note that disabling ATS after 01 January 2017 will cause your app to be rejected during the iOS App Store review process.</p>",
 			"_order": 1
 		},
 		"ats": {
@@ -28,46 +28,53 @@
 						"_order": 1
 					},
 					"NSIncludesSubdomains": {
+						"title": "",
 						"type": "boolean",
 						"description": "Override ATS for all subdomains of a domain you control.",
 						"required": false,
 						"_order": 2
 					},
 					"NSExceptionAllowsInsecureHTTPLoads": {
+						"title": "",
 						"type": "boolean",
 						"description": "Override ATS for HTTP requests to a domain you control.",
 						"required": false,
 						"_order": 3
 					},
 					"NSExceptionRequiresForwardSecrecy": {
+						"title": "",
 						"type": "boolean",
 						"description": "Override the requirement that a server supports perfect Forward Secrecy on a domain you control.",
 						"required": false,
 						"_order": 4
 					},
 					"NSExceptionMinimumTLSVersion": {
+						"title": "",
 						"type": "string",
 						"enum": ["", "TLSv1.2", "TLSv1.1", "TLSv1.0"],
-						"description": "Specify the minimum Transport Layer Security (TLS) version for a domain you control. Valid values are: TLSv1.0 TLSv1.1 TLSv1.2",
+						"description": "Specify the minimum Transport Layer Security (TLS) version for a domain you control.",
 						"required": false,
 						"_order": 5
 					},
 					"NSThirdPartyExceptionAllowsInsecureHTTPLoads": {
+						"title": "",
 						"type": "boolean",
 						"description": "Override ATS for HTTP requests to a domain you do not control.",
 						"required": false,
 						"_order": 6
 					},
 					"NSThirdPartyExceptionRequiresForwardSecrecy": {
+						"title": "",
 						"type": "boolean",
 						"description": "Override the requirement that a server supports perfect Forward Secrecy on a domain you do not control.",
 						"required": false,
 						"_order": 7
 					},
 					"NSThirdPartyExceptionMinimumTLSVersion": {
+						"title": "",
 						"type": "string",
 						"enum": ["", "TLSv1.0", "TLSv1.1", "TLSv1.2"],
-						"description": "Specify the minimum Transport Layer Security (TLS) version for a domain you do not control. Valid values are: TLSv1.2 TLSv1.1 TLSv1.0",
+						"description": "Specify the minimum Transport Layer Security (TLS) version for a domain you do not control.",
 						"required": false,
 						"_order": 8
 					}
