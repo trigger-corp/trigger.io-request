@@ -1,8 +1,8 @@
 {
-    "changes": "* Support cookies when using crosswalk target", 
-    "description": "Make cross domain ajax requests.\n\nThe requests module handles ajax requests using native libraries to prevent cross domain security issues, and allow for file uploads.", 
-    "min_platform_version": "v2.2.1", 
-    "namespace": "request", 
-    "platform_version": "v2.2.1",
-    "version": "2.7"
+	"changes": "* Added configuration section for iOS App Transport Security. [(More Information)](https://trigger.io/modules/request/current/docs/index.html)\n* Removed deprecated `permissions` configuration key.",
+	"description": "Make cross domain ajax requests.\n\nThe requests module handles ajax requests using native libraries to prevent cross domain security issues, and allow for file uploads.",
+	"min_platform_version": "v2.4.6",
+	"namespace": "request",
+	"platform_version": "v2.4.6",
+	"version": "2.8"
 }

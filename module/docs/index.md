@@ -7,8 +7,55 @@ Normally, in-page JavaScript is only able to make XMLHttpRequests (XHRs) to the 
 
 ##Config options
 
-Permissions
-:   This option is here for legacy support, as it is only used by forge apps built as browser extensions which require explicitly whitelisting domains requests can be made to.
+
+Disable iOS ATS
+:    Disable iOS App Transport Security (ATS) for your app.
+
+Configure iOS ATS
+:    Configure exceptions to iOS App Transport Security (ATS) for specific comains.
+
+iOS App Transport Security improves the privacy and data integrity of connections between iOS apps and web services by enforcing minimum security requirements for HTTP-based networking requests.
+
+---
+
+::Important:: As of 01 January 2017 iOS Application Transport Security (ATS) will be mandatory for all apps submitted to the App Store. This means that the HTTP protocol **will no longer be supported on iOS** and all network communication between your app and remote services will need to conform to the following requirements:
+
+- Encrypted using AES-128 or better
+- SHA-2 for certificates
+- TLS v1.2
+- Perfect Forward Secrecy
+
+For more information about the new requirements we highly recommend that you watch the [What's New In Security](https://developer.apple.com/videos/play/wwdc2016/706) session from WWDC 2016.
+
+Apple will allow _some_ temporary exceptions to smooth the transition, but the rules moving forward are strict:
+
+- Most exceptions will now need to be justified to Apple. _This will likely lead to delays during the approval process and may end with your app being rejected._
+- `NSExceptionAllowsInsecureHTTPLoads` and `NSExceptionMinimumTLSVersion` will all require a reasonable justification for use.
+- `NSExceptionRequiresForwardSecrecy` will _not_ require a justification for now. If used, this exception will be granted automatic approval. This is likely to change in future as forward secrecy becomes more widely spread.
+- Content loaded inside of the WebView itself does not need to be encrypted.
+
+---
+
+Exceptions to ATS can be configured by adding a new entry and setting the following values:
+
+* **Domain** The domain you would like to configure ATS exceptions for. e.g. `httpbin.org`
+* **NSIncludesSubdomains** Override ATS for all subdomains of a domain you control.
+* **NSExceptionAllowsInsecureHTTPLoads** Override ATS for HTTP requests to a domain you control.
+* **NSExceptionRequiresForwardSecrecy** Override the requirement that a server supports perfect Forward Secrecy on a domain you control.
+* **NSExceptionMinimumTLSVersion** Specify the minimum Transport Layer Security (TLS) version for a domain you control. Valid values are: `TLSv1.0` `TLSv1.1` `TLSv1.2`
+* **NSThirdPartyExceptionAllowsInsecureHTTPLoads** Override ATS for HTTP requests to a domain you do not control.
+* **NSThirdPartyExceptionRequiresForwardSecrecy** Override the requirement that a server supports perfect Forward Secrecy on a domain you do not control.
+* **NSThirdPartyExceptionMinimumTLSVersion** Specify the minimum Transport Layer Security (TLS) version for a domain you do not control. Valid values are: `TLSv1.2` `TLSv1.1` `TLSv1.0`
+
+For full documentation on the individual keys see the NSAppTransportSecurity section in [Apple's documentation.](https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW33)
+
+> ::ProTip:: Our heartfelt advice to Trigger.io customers is to make use of the exceptions during the grace period but, at the same time, start moving your HTTP infrastructure over to HTTPS sooner rather than later.
+>
+> If the cost or difficulty of getting set up with SSL certificates is a major barrier for your project, do check out [Let’s Encrypt](https://letsencrypt.org/).
+> Let's Encrypt is a free, automated Certificate Authority that operates with support from a large number of sponsors such as Mozilla, the EFF, Chrome, and Cisco.
+
+
+
 
 ##API
 

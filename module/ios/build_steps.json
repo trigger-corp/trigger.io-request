@@ -1,3 +1,9 @@
 [
-        { "do": { "add_ios_system_framework": "Security.framework" } }
+	{ "do": { "add_ios_system_framework": "Security.framework" } },
+	{ "do": { "add_ios_system_framework": "MobileCoreServices.framework" } },
+	{ "do": { "set_in_info_plist": {
+		"key": "NSAppTransportSecurity.NSAllowsArbitraryLoads",
+		"value": "{{modules.request.config.disable_ats}}"
+	} } },
+	{ "do": { "ios_configure_ats": "{{modules.request.config.ats}}"	} }
 ]

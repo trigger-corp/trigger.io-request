@@ -1,14 +1,20 @@
 {
-	"modules": {
-		
-	},
+	"modules": {},
 	"this_module": {
-			"config": {
-				"permissions": [
-					"http://ops.trigger.io/*",
-					"https://trigger.io/*",
-					"file:///*/*"
-				]
-			}
+		"config": {
+			"disable_ats": false,
+			"ats": [
+				{
+					"domain": "httpbin.org",
+					"NSThirdPartyExceptionAllowsInsecureHTTPLoads": true,
+					"NSThirdPartyExceptionRequiresForwardSecrecy": true
+				},
+				{
+					"domain": "ops.trigger.io",
+					"NSExceptionAllowsInsecureHTTPLoads": true,
+					"NSExceptionRequiresForwardSecrecy": true
+				}
+			]
 		}
+	}
 }

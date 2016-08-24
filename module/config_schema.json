@@ -2,12 +2,76 @@
 	"type": "object",
 	"additionalProperties": false,
 	"properties": {
-		"permissions": {
-			"required": true, 
-			"type": "array", 
-			"description": "Match patterns specifying allows URLs for cross domain requests (not currently used on mobile).", 
+		"disable_ats": {
+			"title": "Disable iOS ATS",
+			"type": "boolean",
+			"required": false,
+			"description": "<p>Disables iOS App Transport Security (ATS) for your app.</p><p style='color:red;'>Please note that disabling ATS after 01 January 2017 will cause your app to be rejected during the iOS App Store review process.</p>",
+			"_order": 1
+		},
+		"ats": {
+			"title": "Configure iOS ATS",
+			"type": "array",
+			"description": "<p>Configure iOS App Transport Security (ATS) exceptions for specific domains.</p> <p style='color:red;'>Please note that adding entries to this section may require you to justify their usage to the iOS App Store reviewer and cause your app to be delayed or even rejected.</p><p>For further information please read the <a href='https://trigger.io/modules/request/current/docs/index.html'>forge.request documentation</a>.</p>",
+			"required": false,
+			"_order": 2,
 			"items": {
-				"type": "string"
+				"type": "object",
+				"additionalProperties": false,
+				"required": false,
+				"properties": {
+					"domain": {
+						"title": "Domain",
+						"type": "string",
+						"description": "The domain you would like to configure ATS for. e.g. httpbin.org",
+						"required": false,
+						"_order": 1
+					},
+					"NSIncludesSubdomains": {
+						"type": "boolean",
+						"description": "Override ATS for all subdomains of a domain you control.",
+						"required": false,
+						"_order": 2
+					},
+					"NSExceptionAllowsInsecureHTTPLoads": {
+						"type": "boolean",
+						"description": "Override ATS for HTTP requests to a domain you control.",
+						"required": false,
+						"_order": 3
+					},
+					"NSExceptionRequiresForwardSecrecy": {
+						"type": "boolean",
+						"description": "Override the requirement that a server supports perfect Forward Secrecy on a domain you control.",
+						"required": false,
+						"_order": 4
+					},
+					"NSExceptionMinimumTLSVersion": {
+						"type": "string",
+						"enum": ["", "TLSv1.2", "TLSv1.1", "TLSv1.0"],
+						"description": "Specify the minimum Transport Layer Security (TLS) version for a domain you control. Valid values are: TLSv1.0 TLSv1.1 TLSv1.2",
+						"required": false,
+						"_order": 5
+					},
+					"NSThirdPartyExceptionAllowsInsecureHTTPLoads": {
+						"type": "boolean",
+						"description": "Override ATS for HTTP requests to a domain you do not control.",
+						"required": false,
+						"_order": 6
+					},
+					"NSThirdPartyExceptionRequiresForwardSecrecy": {
+						"type": "boolean",
+						"description": "Override the requirement that a server supports perfect Forward Secrecy on a domain you do not control.",
+						"required": false,
+						"_order": 7
+					},
+					"NSThirdPartyExceptionMinimumTLSVersion": {
+						"type": "string",
+						"enum": ["", "TLSv1.0", "TLSv1.1", "TLSv1.2"],
+						"description": "Specify the minimum Transport Layer Security (TLS) version for a domain you do not control. Valid values are: TLSv1.2 TLSv1.1 TLSv1.0",
+						"required": false,
+						"_order": 8
+					}
+				}
 			}
 		}
 	}
