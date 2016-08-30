@@ -20,10 +20,10 @@ iOS App Transport Security improves the privacy and data integrity of connection
 
 ::Important:: As of 01 January 2017 iOS Application Transport Security (ATS) will be mandatory for all apps submitted to the App Store. This means that the HTTP protocol **will no longer be supported on iOS** and all network communication between your app and remote services will need to conform to the following requirements:
 
-- Encrypted using AES-128 or better
-- SHA-2 for certificates
-- TLS v1.2
-- Perfect Forward Secrecy
+* Encrypted using AES-128 or better.
+* SHA-2 for certificates with either a 2048 bit or greater RSA key, or a 256 bit or greater Elliptic-Curve (ECC) key.
+* Tansport Layer Security (TLS) protocol must be v1.2 or greater.
+* All connection ciphers must be using forward secrecy. The following ciphers will be accepted:
 
 For more information about the new requirements we highly recommend that you watch the [What's New In Security](https://developer.apple.com/videos/play/wwdc2016/706) session from WWDC 2016.
 
