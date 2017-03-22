@@ -32,6 +32,42 @@ asyncTest("HTTPS GET", 1, function() {
 	});
 });
 
+asyncTest("HTTP GET with BasicAuth", 2, function() {
+	forge.request.ajax({
+		url: "http://httpbin.org/basic-auth/username/password",
+		username: "username",
+		password: "password",
+		success: function (data) {
+			data = JSON.parse(data);
+			equal(data.authenticated, true);
+			equal(data.user, "username");
+			start();
+		},
+		error: function () {
+			ok(false, "Ajax error callback");
+			start();
+		}
+	});
+});
+
+asyncTest("HTTPS GET with BasicAuth", 2, function() {
+	forge.request.ajax({
+		url: "https://httpbin.org/basic-auth/username/password",
+		username: "username",
+		password: "password",
+		success: function (data) {
+			data = JSON.parse(data);
+			equal(data.authenticated, true);
+			equal(data.user, "username");
+			start();
+		},
+		error: function () {
+			ok(false, "Ajax error callback");
+			start();
+		}
+	});
+});
+
 asyncTest("HTTP DELETE", 1, function() {
 	forge.request.ajax({
 		url: "http://httpbin.org/delete",

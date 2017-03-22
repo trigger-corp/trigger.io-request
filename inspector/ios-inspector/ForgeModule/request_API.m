@@ -7,54 +7,84 @@
 //
 
 #import "request_API.h"
-#import "AFNetworking.h"
+#import "request_ProgressDelegate.h"
 
 
 @implementation request_API
 
 + (void)ajax:(ForgeTask*)task url:(NSString*)url {
 	NSDictionary* params = task.params;
-	
+
+    // Create request
 	NSURL *urlObj = [NSURL URLWithString:url];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:urlObj];
-	
 	[request setHTTPMethod:[[params objectForKey:@"type"] uppercaseString]];
 	[request setAllHTTPHeaderFields:[params objectForKey:@"headers"]];
 	[request setTimeoutInterval:([((NSNumber*)[params objectForKey:@"timeout"]) floatValue] / 1000.0f)];
-	
-	AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-	
-	[operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-		[task success:@{
-						@"response": [operation responseString] ? [operation responseString] : @"",
-						@"headers": [[operation response] allHeaderFields]
-						}];
-	} failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-		NSMutableDictionary *errorObj = [[NSMutableDictionary alloc] init];
-		long statusCode = [[operation response] statusCode];
-		[errorObj setValue:[@"HTTP error code received from server: " stringByAppendingString:[NSString stringWithFormat:@"%ld", statusCode]] forKey:@"message"];
-		[errorObj setValue:@"EXPECTED_FAILURE" forKey:@"type"];
-		[errorObj setValue:[NSString stringWithFormat:@"%ld", statusCode] forKey:@"statusCode"];
-		[errorObj setValue:[operation responseString] forKey:@"content"];
-		[task error:errorObj];
-	}];
-	
-	if ([params objectForKey:@"progress"] && [params objectForKey:@"progress"] != [NSNull null]) {
-		[operation setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-			[[ForgeApp sharedApp] event:[NSString stringWithFormat:@"request.progress.%@", [params objectForKey:@"progress"]] withParam:@{@"total": [NSNumber numberWithLongLong:totalBytesExpectedToWrite], @"done": [NSNumber numberWithLongLong:totalBytesWritten]}];
-		}];
-	}
-	
-	AFHTTPClient *client = [AFHTTPClient clientWithBaseURL:urlObj];
-	
+
+    // Create session
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = nil;
+    __block request_ProgressDelegate *delegate =  nil;
+    if ([params objectForKey:@"progress"] && [params objectForKey:@"progress"] != [NSNull null]) {
+        delegate = [[request_ProgressDelegate alloc] initWithTask:task];
+        session = [NSURLSession sessionWithConfiguration:configuration delegate:delegate delegateQueue:[NSOperationQueue mainQueue]];
+    } else {
+        session = [NSURLSession sessionWithConfiguration:configuration];
+    }
+
+    // Set authorization header if requested
 	if (([params objectForKey:@"username"] && [params objectForKey:@"username"] != [NSNull null]) || ([params objectForKey:@"password"] && [params objectForKey:@"password"] != [NSNull null])) {
-		[client setAuthorizationHeaderWithUsername:[params objectForKey:@"username"] password:[params objectForKey:@"password"]];
+        NSString *username = [params objectForKey:@"username"];
+        NSString *password = [params objectForKey:@"password"];
+        NSData *basicAuthCredentials = [[NSString stringWithFormat:@"%@:%@", username, password] dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *base64AuthCredentials = [NSString stringWithFormat:@"Basic %@", [basicAuthCredentials base64EncodedStringWithOptions:(NSDataBase64EncodingOptions)0]];
+        [request addValue:base64AuthCredentials forHTTPHeaderField:@"Authorization"];
 	}
-	
+
+    // Helper to process request once configuration is complete
 	void (^sendRequest)() = ^() {
-		[client enqueueHTTPRequestOperation:operation];
+        NSURLSessionDataTask *client = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (delegate != nil) {
+                [delegate releaseDelegate];
+            }
+
+            // parse response
+            long statusCode = 0;
+            NSString *responseString = @"";
+            NSDictionary *responseHeaders = [[NSDictionary alloc] init];
+            if (![response isKindOfClass:[NSHTTPURLResponse class]]) {
+                statusCode = 418;
+                responseString = @"418 I'm a teapot (RFC 2324)";
+            } else {
+                statusCode = [(NSHTTPURLResponse *)response statusCode];
+                responseHeaders = [(NSHTTPURLResponse *)response allHeaderFields];
+                if (data != nil) {
+                    responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                }
+            }
+
+            // handle errors
+            if (error != nil || statusCode < 200 || statusCode > 299) {
+                NSMutableDictionary *errorObj = [[NSMutableDictionary alloc] init];
+                [errorObj setValue:[@"HTTP error code received from server: " stringByAppendingString:[NSString stringWithFormat:@"%ld", statusCode]] forKey:@"message"];
+                [errorObj setValue:@"EXPECTED_FAILURE" forKey:@"type"];
+                [errorObj setValue:[NSString stringWithFormat:@"%ld", statusCode] forKey:@"statusCode"];
+                [errorObj setValue:responseString forKey:@"content"];
+                [errorObj setValue:responseHeaders forKey:@"headers"];
+                [task error:errorObj];
+                return;
+            }
+
+            [task success:@{@"response": responseString,
+                            @"headers":  responseHeaders}];
+
+        }];
+        
+        [client resume];
 	};
-	
+
+    // Setup request parameters
 	if ([params objectForKey:@"data"] && [params objectForKey:@"data"] != [NSNull null]) {
 		NSMutableData *payload = [NSMutableData dataWithLength:0];
 		[payload appendData:[[params objectForKey:@"data"] dataUsingEncoding:NSUTF8StringEncoding]];
