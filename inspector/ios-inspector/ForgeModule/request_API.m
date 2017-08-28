@@ -12,7 +12,16 @@
 
 @implementation request_API
 
+/**
+ * @deprecated This method is deprecated starting in module version 2.10 and platform version 2.6
+ * @note Please use @code [requestAPI httpx:(ForgeTask*)task url:(NSString*)url] @endcode instead.
+ */
 + (void)ajax:(ForgeTask*)task url:(NSString*)url {
+    [request_API httpx:task url:url];
+}
+
+
++ (void)httpx:(ForgeTask*)task url:(NSString*)url {
 	NSDictionary* params = task.params;
 
     // Create request
@@ -43,7 +52,7 @@
 	}
 
     // Helper to process request once configuration is complete
-	void (^sendRequest)() = ^() {
+	void (^sendRequest)(void) = ^() {
         NSURLSessionDataTask *client = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (delegate != nil) {
                 [delegate releaseDelegate];

@@ -1,8 +1,8 @@
 {
-	"changes": "* Removed iOS dependency on AFNetworking framework.",
-	"description": "Make cross domain ajax requests.\n\nThe requests module handles ajax requests using native libraries to prevent cross domain security issues, and allow for file uploads.",
-	"min_platform_version": "v2.5.1",
-	"namespace": "request",
-	"platform_version": "v2.5.1",
-	"version": "2.9"
+    "changes": "* Added support for TLS Server Name Indication (SNI)\n* Added support for HTTP/2",
+    "description": "Make cross domain ajax requests.\n\nThe requests module handles ajax requests using native libraries to prevent cross domain security issues, and allow for file uploads.",
+    "min_platform_version": "v2.5.5",
+    "namespace": "request",
+    "platform_version": "v2.5.5",
+    "version": "2.10"
 }

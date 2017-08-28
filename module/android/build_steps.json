@@ -1,0 +1,6 @@
+[
+    { "do": { "android_add_gradle_dependency": "com.squareup.okhttp3:okhttp:3.8.1"} },
+    { "do": { "android_add_proguard_rule": "-dontwarn okio.**" } },
+    { "do": { "android_add_proguard_rule": "-dontwarn javax.annotation.Nullable" } },
+    { "do": { "android_add_proguard_rule": "-dontwarn javax.annotation.ParametersAreNonnullByDefault" } }
+]

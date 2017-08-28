@@ -1,20 +1,20 @@
 {
-	"modules": {},
-	"this_module": {
-		"config": {
-			"disable_ats": false,
-			"ats": [
-				{
-					"domain": "httpbin.org",
-					"NSThirdPartyExceptionAllowsInsecureHTTPLoads": true,
-					"NSThirdPartyExceptionRequiresForwardSecrecy": true
-				},
-				{
-					"domain": "ops.trigger.io",
-					"NSExceptionAllowsInsecureHTTPLoads": true,
-					"NSExceptionRequiresForwardSecrecy": true
-				}
-			]
-		}
-	}
+    "modules": {},
+    "this_module": {
+        "config": {
+            "disable_ats": false,
+            "ats": [
+                {
+                    "domain": "httpbin.org",
+                    "NSThirdPartyExceptionAllowsInsecureHTTPLoads": true,
+                    "NSThirdPartyExceptionRequiresForwardSecrecy": true
+                },
+                {
+                    "domain": "ops.trigger.io",
+                    "NSExceptionAllowsInsecureHTTPLoads": true,
+                    "NSExceptionRequiresForwardSecrecy": true
+                }
+            ]
+        }
+    }
 }
