@@ -43,7 +43,7 @@ forge['request'] = {
 // - internal --------------------------------------------------------------
 
 forge["request"]["_get"] = function(backend, url, success, error) {
-    forge.internal.call(backend, {
+    forge.request._ajax(backend, {
         url: url,
         dataType: "text",
         success: success && function () {
@@ -147,7 +147,7 @@ var generateMultipartString = function (obj, boundary) {
 };
 
 
-      forge["request"]["_ajax"] = function (backend, options, success, error) {
+forge["request"]["_ajax"] = function (backend, options, success, error) {
     var files = (options.files ? options.files : null);
     var fileUploadMethod = (options.fileUploadMethod ? options.fileUploadMethod : 'multipart');
     var url = (options.url ? options.url : null);

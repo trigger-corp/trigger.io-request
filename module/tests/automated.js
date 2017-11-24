@@ -2,22 +2,17 @@
 
 module("forge.request.ajax");
 
-asyncTest("HTTP GET", 1, function() {
-    forge.request.ajax({
-        url: "http://httpbin.org/get",
-        success: function (data) {
-            data = JSON.parse(data);
-            equal(data.url, "http://httpbin.org/get");
-            start();
-        },
-        error: function () {
-            ok(false, "Ajax error callback");
-            start();
-        }
+asyncTest("HTTPS forge.request.get", 1, function() {
+    forge.request.get("https://httpbin.org/get", function (data) {
+        equal(data.url, "https://httpbin.org/get");
+        start();
+    }, function () {
+        ok(false, "Ajax error callback");
+        start();
     });
 });
 
-asyncTest("HTTPS GET", 1, function() {
+asyncTest("HTTPS forge.request.ajax GET", 1, function() {
     forge.request.ajax({
         url: "https://httpbin.org/get",
         success: function (data) {
