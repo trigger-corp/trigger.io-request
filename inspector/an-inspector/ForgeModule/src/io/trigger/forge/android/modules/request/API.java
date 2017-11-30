@@ -163,8 +163,16 @@ public class API {
         if (contentType == null) {
             ForgeLog.d("Try to get content type from headers");
             contentType = headers.has("Content-Type") ? headers.get("Content-Type").getAsString() : null;
-            ForgeLog.d("Now content type is: " + contentType);
         }
+        if (contentType == null && task.params.has("files") && task.params.has("fileUploadMethod") && task.params.get("fileUploadMethod").getAsString().equals("raw")) {
+            JsonArray files = task.params.getAsJsonArray("files");
+            if (files.size() > 0) {
+                ForgeFile file = new ForgeFile(ForgeApp.getActivity(), files.get(0).getAsJsonObject());
+                contentType = file.mimeType();
+            }
+
+        }
+        ForgeLog.d("Content type is: " + contentType);
 
         // Hook up progress callback
         final String progress = task.params.has("progress") && !task.params.get("progress").isJsonNull() ? task.params.get("progress").getAsString() : null;

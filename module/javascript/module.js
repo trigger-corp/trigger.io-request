@@ -187,10 +187,6 @@ forge["request"]["_ajax"] = function (backend, options, success, error) {
                 files = [files[0]];
             }
             data = null;
-            // XXX: This should probably be set in native code.
-            if (!contentType) {
-                contentType = "image/jpg";
-            }
         }
     } else {
         if (type == 'GET') {

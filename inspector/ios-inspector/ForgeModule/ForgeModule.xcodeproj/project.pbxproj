@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		712584191F960CD60014BD29 /* request_BackgroundDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 712584181F960CD60014BD29 /* request_BackgroundDelegate.m */; };
+		7125841C1F960F190014BD29 /* request_EventListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 7125841B1F960F190014BD29 /* request_EventListener.m */; };
 		712878C116B6AA3800419DB2 /* request_API.m in Sources */ = {isa = PBXBuildFile; fileRef = 712878C016B6AA3800419DB2 /* request_API.m */; };
 		71890F4D1E82A2CE00E9E26D /* request_ProgressDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 71890F4C1E82A2CE00E9E26D /* request_ProgressDelegate.m */; };
 		B31B6D5215C13D5200854074 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31B6D5115C13D5200854074 /* Foundation.framework */; };
@@ -19,6 +21,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		712584171F960CD60014BD29 /* request_BackgroundDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = request_BackgroundDelegate.h; sourceTree = "<group>"; };
+		712584181F960CD60014BD29 /* request_BackgroundDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = request_BackgroundDelegate.m; sourceTree = "<group>"; };
+		7125841A1F960F190014BD29 /* request_EventListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = request_EventListener.h; sourceTree = "<group>"; };
+		7125841B1F960F190014BD29 /* request_EventListener.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = request_EventListener.m; sourceTree = "<group>"; };
+		7125841D1F9636660014BD29 /* placeholder.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = placeholder.plist; sourceTree = "<group>"; };
 		712878BF16B6AA3800419DB2 /* request_API.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = request_API.h; sourceTree = "<group>"; };
 		712878C016B6AA3800419DB2 /* request_API.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = request_API.m; sourceTree = "<group>"; };
 		71890F4B1E82A2CE00E9E26D /* request_ProgressDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = request_ProgressDelegate.h; sourceTree = "<group>"; };
@@ -62,6 +69,11 @@
 		B31B6D4315C13D5200854074 = {
 			isa = PBXGroup;
 			children = (
+				7125841D1F9636660014BD29 /* placeholder.plist */,
+				7125841A1F960F190014BD29 /* request_EventListener.h */,
+				7125841B1F960F190014BD29 /* request_EventListener.m */,
+				712584171F960CD60014BD29 /* request_BackgroundDelegate.h */,
+				712584181F960CD60014BD29 /* request_BackgroundDelegate.m */,
 				71890F4B1E82A2CE00E9E26D /* request_ProgressDelegate.h */,
 				71890F4C1E82A2CE00E9E26D /* request_ProgressDelegate.m */,
 				712878BF16B6AA3800419DB2 /* request_API.h */,
@@ -174,6 +186,8 @@
 			files = (
 				712878C116B6AA3800419DB2 /* request_API.m in Sources */,
 				71890F4D1E82A2CE00E9E26D /* request_ProgressDelegate.m in Sources */,
+				7125841C1F960F190014BD29 /* request_EventListener.m in Sources */,
+				712584191F960CD60014BD29 /* request_BackgroundDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,7 +348,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				INFOPLIST_FILE = "";
+				INFOPLIST_FILE = "$(SRCROOT)/placeholder.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = NO;
@@ -356,7 +370,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				INFOPLIST_FILE = "";
+				INFOPLIST_FILE = "$(SRCROOT)/placeholder.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = NO;

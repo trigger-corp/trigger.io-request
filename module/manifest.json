@@ -1,8 +1,8 @@
 {
-    "changes": "* Fixed: forge.request.get() fails silently",
+    "changes": "* Added support for file upload content type detection",
     "description": "Make cross domain ajax requests.\n\nThe requests module handles ajax requests using native libraries to prevent cross domain security issues, and allow for file uploads.",
-    "min_platform_version": "v2.6.2",
+    "min_platform_version": "v2.6.4",
     "namespace": "request",
-    "platform_version": "v2.6.2",
+    "platform_version": "v2.6.4",
     "version": "2.10.1"
 }

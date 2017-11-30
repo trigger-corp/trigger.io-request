@@ -19,10 +19,12 @@
     return self;
 }
 
+
 - (void) releaseDelegate {
     forgeTask = nil;
     me = nil;
 }
+
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
     [[ForgeApp sharedApp] event:[NSString stringWithFormat:@"request.progress.%@", [forgeTask.params objectForKey:@"progress"]] withParam:@{@"total": [NSNumber numberWithLongLong:totalBytesExpectedToSend], @"done": [NSNumber numberWithLongLong:totalBytesSent]}];

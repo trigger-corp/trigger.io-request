@@ -1,5 +1,12 @@
 {
-    "modules": {},
+    "modules": {
+        "file": {
+            "version": "2.19",
+            "config": {
+                "usage_description": "We will make an attempt to steal your cookies."
+            }
+        }
+    },
     "this_module": {
         "config": {
             "disable_ats": false,
