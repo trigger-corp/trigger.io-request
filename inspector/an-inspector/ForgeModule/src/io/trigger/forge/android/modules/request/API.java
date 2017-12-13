@@ -225,6 +225,7 @@ public class API {
                 JsonArray files = params.getAsJsonArray("files");
                 for (int i = 0; i < files.size(); i++) {
                     JsonObject file = files.get(i).getAsJsonObject();
+                    ForgeFile forgeFile = new ForgeFile(ForgeApp.getActivity(), file);
 
                     String filename; // multipart filename
                     String name = "" + i; // multipart field name
@@ -246,7 +247,7 @@ public class API {
                     sb.append("Content-Disposition: form-data; ");
                     sb.append("name=\"" + name + "\"; ");
                     sb.append("filename=\"" + filename + "\"\r\n");
-                    sb.append("Content-Type: ").append(ForgeApp.getActivity().getContentResolver().getType(Uri.parse(file.get("uri").getAsString()))).append("\r\n\r\n");
+                    sb.append("Content-Type: ").append(forgeFile.mimeType()).append("\r\n\r\n");
                     uploadStreams.add(new ByteArrayInputStream(sb.toString().getBytes("UTF-8")));
                     uploadStreams.add(new ForgeFile(ForgeApp.getActivity(), file).fd().createInputStream());
                     uploadStreams.add(new ByteArrayInputStream("\r\n".getBytes("UTF-8")));
