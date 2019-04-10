@@ -23,5 +23,8 @@
                 }
             ]
         }
+    },
+    "flags": {
+        "android_uses_cleartext_traffic": true
     }
 }
