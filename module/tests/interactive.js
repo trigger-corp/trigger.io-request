@@ -3,7 +3,7 @@
 module("forge.request.ajax");
 // forge.flags.promises(true);
 
-var testRoot = 'http://ops.trigger.io/75d92dce/tests/';
+var testRoot = 'https://ops.trigger.io/75d92dce/tests/';
 
 if (forge.file) {
     asyncTest("File upload - image", 1, function() {
@@ -76,7 +76,7 @@ asyncTest("File upload - progress", 1, function() {
 
 asyncTest("Test cookie persisted across runs", 1, function () {
     forge.request.ajax({
-        url: "http://httpbin.org/cookies",
+        url: "https://httpbin.org/cookies",
         success: function (data) {
             forge.logging.log("GOT: " + data);
             data = JSON.parse(data);

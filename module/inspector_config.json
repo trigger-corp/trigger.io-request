@@ -1,7 +1,7 @@
 {
     "modules": {
         "file": {
-            "version": "2.19",
+            "version": "2.24",
             "config": {
                 "usage_description": "We will make an attempt to steal your cookies."
             }
