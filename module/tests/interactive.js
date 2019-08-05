@@ -56,20 +56,25 @@ if (forge.file) {
 }
 
 asyncTest("File upload - progress", 1, function() {
-    forge.request.ajax({
-        url: testRoot + "upload_silent.php",
-        files: [forge.inspector.getFixture("request", "test.zip")],
-        success: function (data) {
-            equal(data, 'OK', "Success");
-            start();
-        },
-        error: function () {
-            ok(false, "Ajax error callback");
-            start();
-        },
-        progress: function (progress) {
-            askQuestion("Progress: "+Math.round(100*progress.done/progress.total)+"%");
-        }
+    forge.tools.getLocal("fixtures/request/test.zip", function (file) {
+        forge.request.ajax({
+            url: testRoot + "upload_silent.php",
+            files: [file],
+            success: function (data) {
+                equal(data, 'OK', "Success");
+                start();
+            },
+            error: function () {
+                ok(false, "Ajax error callback");
+                start();
+            },
+            progress: function (progress) {
+                askQuestion("Progress: "+Math.round(100*progress.done/progress.total)+"%");
+            }
+        });
+    }, function (e) {
+        ok(false, JSON.stringify(e));
+        start();
     });
 });
 
