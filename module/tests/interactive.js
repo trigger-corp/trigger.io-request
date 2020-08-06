@@ -3,15 +3,16 @@
 module("forge.request.ajax");
 // forge.flags.promises(true);
 
-var testRoot = 'https://ops.trigger.io/75d92dce/tests/';
+var test_ops_root = 'https://ops.trigger.io/75d92dce/tests/';
+var test_httpbin_post = "https://httpbin.org/post";
 
 if (forge.file) {
-    asyncTest("File upload - image", 1, function() {
+    asyncTest("File upload ops raw - image", 1, function() {
         forge.file.getImage({
             source: "gallery"
         }, function (file) {
             forge.request.ajax({
-                url: testRoot + "upload_silent.php",
+                url: test_ops_root + "upload_silent.php",
                 files: [file],
                 fileUploadMethod: "raw",
                 success: function (data) {
@@ -30,13 +31,13 @@ if (forge.file) {
     });
 
 
-    asyncTest("File upload - video", 1, function() {
+    asyncTest("File upload ops raw - video", 1, function() {
         forge.file.getVideo({
             source: "gallery",
             videoQuality: "low"
         }, function (file) {
             forge.request.ajax({
-                url: testRoot + "upload_silent.php",
+                url: test_ops_root + "upload_silent.php",
                 files: [file],
                 fileUploadMethod: "raw",
                 success: function (data) {
@@ -49,16 +50,55 @@ if (forge.file) {
                 },
                 progress: function (progress) {
                     askQuestion("Progress: "+Math.round(100*progress.done/progress.total)+"%");
+                }
+            });
+        });
+    });
+
+    asyncTest("File upload httpbin - video", 1, function() {
+        forge.file.getVideo(function (file) {
+            forge.request.ajax({
+                url: test_root_httpbin,
+                files: [file],
+                success: function (data) {
+                    data = JSON.parse(data);
+                    forge.logging.log("Response: " + JSON.stringify(data.headers));
+                    start();
+                },
+                error: function () {
+                    ok(false, "Ajax error callback");
+                    start();
+                }
+            });
+        });
+    });
+
+    asyncTest("File upload httpbin raw - video", 1, function() {
+        forge.file.getVideo(function (file) {
+            forge.request.ajax({
+                url: test_root_httpbin,
+                files: [file],
+                fileUploadMethod: "raw",
+                success: function (data) {
+                    data = JSON.parse(data);
+                    forge.logging.log("Response: " + JSON.stringify(data.headers));
+                    ok(true);
+                    start();
+                },
+                error: function () {
+                    ok(false, "Ajax error callback");
+                    start();
                 }
             });
         });
     });
 }
 
+
 asyncTest("File upload - progress", 1, function() {
     forge.tools.getLocal("fixtures/request/test.zip", function (file) {
         forge.request.ajax({
-            url: testRoot + "upload_silent.php",
+            url: test_ops_root + "upload_silent.php",
             files: [file],
             success: function (data) {
                 equal(data, 'OK', "Success");
