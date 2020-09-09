@@ -1,8 +1,8 @@
 {
     "changes": "* Update okhttp to 3.11.0\n* Update proguard rules to new recommendations",
     "description": "Make cross domain ajax requests.\n\nThe requests module handles ajax requests using native libraries to prevent cross domain security issues, and allow for file uploads.",
-    "min_platform_version": "v2.7.1",
+    "min_platform_version": "v2.9.0",
     "namespace": "request",
-    "platform_version": "v2.7.1",
-    "version": "2.11"
+    "platform_version": "v2.9.0",
+    "version": "2.12"
 }
