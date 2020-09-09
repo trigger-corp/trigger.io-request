@@ -1,6 +1,6 @@
 /* global forge, _forgeDebug */
 
-forge['request'] = {
+forge["request"] = {
 
     /**
      * Get the response data from a URL. Imposes no cross-domain restrictions.
@@ -75,7 +75,7 @@ var generateQueryString = function (obj) {
         } else if (obj instanceof Array) {
             var index = 0;
             for (var x in obj) {
-                var key = (scope ? scope : '') + '[' + index + ']';
+                var key = (scope ? scope : "") + "[" + index + "]";
                 index += 1;
                 if (!obj.hasOwnProperty(x)) {
                     continue;
@@ -89,16 +89,16 @@ var generateQueryString = function (obj) {
                 }
                 var key2 = x2;
                 if (scope) {
-                    key2 = scope + '[' + x2 + ']';
+                    key2 = scope + "[" + x2 + "]";
                 }
                 processObj(obj[x2], key2);
             }
         } else {
-            params.push(encodeURIComponent(scope)+'='+encodeURIComponent(obj));
+            params.push(encodeURIComponent(scope) + "=" + encodeURIComponent(obj));
         }
     };
     processObj(obj);
-    return params.join('&').replace('%20', '+');
+    return params.join("&").replace("%20", "+");
 };
 
 
@@ -106,22 +106,22 @@ var generateQueryString = function (obj) {
  * Generate a URI from an existing url and additional query data
  */
 var generateURI = function (uri, queryData) {
-    var newQuery = '';
-    if (uri.indexOf('?') !== -1) {
-        newQuery += uri.split('?')[1]+'&';
-        uri = uri.split('?')[0];
+    var newQuery = "";
+    if (uri.indexOf("?") !== -1) {
+        newQuery += uri.split("?")[1] + "&";
+        uri = uri.split("?")[0];
     }
-    newQuery += generateQueryString(queryData)+'&';
+    newQuery += generateQueryString(queryData) + "&";
     // Remove trailing &
     newQuery = newQuery.substring(0,newQuery.length-1);
-    return uri+(newQuery ? '?'+newQuery : '');
+    return uri + (newQuery ? "?" + newQuery : "");
 };
 
 var generateMultipartString = function (obj, boundary) {
     if (typeof obj === "string") {
-        return '';
+        return "";
     }
-    var partQuery = '';
+    var partQuery = "";
     for (var key in obj) {
         if (!obj.hasOwnProperty(key)) {
             continue;
@@ -130,17 +130,18 @@ var generateMultipartString = function (obj, boundary) {
             continue;
         }
         var value = obj[key];
-        if (Object.prototype.toString.call(value) === '[object Array]') {
+        if (Object.prototype.toString.call(value) === "[object Array]") {
             // value is an array
             for (var i = 0; i < value.length; i++) {
                 var subPart = {};
-                subPart[key + '[' + i + ']'] = value[i];
+                subPart[key + "[" + i + "]"] = value[i];
                 partQuery += generateMultipartString(subPart, boundary);
             }
         } else {
-            partQuery += '--'+boundary+'\r\n';
-            partQuery += 'Content-Disposition: form-data; name="'+key.replace('"', '\\"')+'"\r\n\r\n';
-            partQuery += obj[key].toString()+'\r\n';
+            partQuery += "--" + boundary + "\r\n";
+
+            partQuery += "Content-Disposition: form-data; name=\"" + key.replace("\"", "\\\"") + "\"\r\n\r\n";
+            partQuery += obj[key].toString() + "\r\n";
         }
     }
     return partQuery;
@@ -149,7 +150,7 @@ var generateMultipartString = function (obj, boundary) {
 
 forge["request"]["_ajax"] = function (backend, options, success, error) {
     var files = (options.files ? options.files : null);
-    var fileUploadMethod = (options.fileUploadMethod ? options.fileUploadMethod : 'multipart');
+    var fileUploadMethod = (options.fileUploadMethod ? options.fileUploadMethod : "multipart");
     var url = (options.url ? options.url : null);
     success = success ? success : (options.success ? options.success : undefined);
     error = error ? error : (options.error ? options.error : undefined);
@@ -174,22 +175,23 @@ forge["request"]["_ajax"] = function (backend, options, success, error) {
         // Given "text/html" instead of ["text/html"].
         accepts = [accepts];
     }
+
     var boundary = null;
     if (files) {
-        if (fileUploadMethod == 'multipart') {
+        if (fileUploadMethod == "multipart") {
             boundary = forge.tools.UUID().replace(/-/g,"");
             data = generateMultipartString(data, boundary);
-            contentType = "multipart/form-data; boundary="+boundary;
-        } else if (fileUploadMethod == 'raw') {
+            contentType = "multipart/form-data; boundary=" + boundary;
+        } else if (fileUploadMethod == "raw") {
             // Limit to one file
             if (files.length > 1) {
-                forge.logging.warning("Only one file can be uploaded at once with type 'raw'");
+                forge.logging.warning("Only one file can be uploaded at once with type \"raw\"");
                 files = [files[0]];
             }
             data = null;
         }
     } else {
-        if (type == 'GET') {
+        if (type == "GET") {
             url = generateURI(url, data);
             data = null;
         } else if (data) {
@@ -202,14 +204,14 @@ forge["request"]["_ajax"] = function (backend, options, success, error) {
 
     if (cache) {
         cache = {};
-        cache['wm'+Math.random()] = Math.random();
+        cache["wm" + Math.random()] = Math.random();
         url = generateURI(url, cache);
     }
     if (accepts) {
-        headers['Accept'] = accepts.join(',');
+        headers["Accept"] = accepts.join(",");
     }
     if (contentType) {
-        headers['Content-Type'] = contentType;
+        headers["Content-Type"] = contentType;
     }
 
     // Catalyst output
@@ -222,13 +224,11 @@ forge["request"]["_ajax"] = function (backend, options, success, error) {
             debug.method = type;
             debug.data = data;
             debug.url = url;
-
             _forgeDebug.wi.NetworkNotify.identifierForInitialRequest(debug.id, debug.url, {
                 url: debug.fromUrl,
                 frameId: 0,
                 loaderId: 0
             }, []);
-
             _forgeDebug.wi.NetworkNotify.willSendRequest(debug.id, debug.reqTime, {
                 url: debug.url,
                 httpMethod: debug.method,
@@ -258,22 +258,20 @@ forge["request"]["_ajax"] = function (backend, options, success, error) {
                     connectionID: 0,
                     wasCached: false
                 });
-
                 _forgeDebug.wi.NetworkNotify.setInitialContent(debug.id, debug.respText, "XHR");
-
                 _forgeDebug.wi.NetworkNotify.didFinishLoading(debug.id, debug.respTime);
             } catch (e) {}
         }
         error && error({
-            message: 'Request timed out',
-            type: 'EXPECTED_FAILURE'
+            message: "Request timed out",
+            type: "EXPECTED_FAILURE"
         });
     }, timeout);
 
     var progressId = null;
     if (progress !== null) {
         progressId = forge.tools.UUID();
-        forge.internal.addEventListener('request.progress.'+progressId, progress);
+        forge.internal.addEventListener("request.progress." + progressId, progress);
     }
 
     forge.internal.call(backend, {
@@ -309,27 +307,24 @@ forge["request"]["_ajax"] = function (backend, options, success, error) {
                     connectionID: 0,
                     wasCached: false
                 });
-
                 _forgeDebug.wi.NetworkNotify.setInitialContent(debug.id, debug.respText, "XHR");
-
                 _forgeDebug.wi.NetworkNotify.didFinishLoading(debug.id, debug.respTime);
             } catch (e) {}
         }
         try {
-            if (dataType == 'xml') {
+            if (dataType == "xml") {
                 // Borrowed from jQuery.
                 var tmp, xml;
-                if ( window.DOMParser ) { // Standard
+                if (window.DOMParser) { // Standard
                     tmp = new DOMParser();
                     xml = tmp.parseFromString(data , "text/xml");
                 } else { // IE
-                    xml = new ActiveXObject( "Microsoft.XMLDOM" );
+                    xml = new ActiveXObject("Microsoft.XMLDOM");
                     xml.async = "false";
                     xml.loadXML(data);
                 }
-
                 data = xml;
-            } else if (dataType == 'json') {
+            } else if (dataType == "json") {
                 data = JSON.parse(data);
             }
         } catch (e) {
@@ -355,9 +350,7 @@ forge["request"]["_ajax"] = function (backend, options, success, error) {
                     connectionID: 0,
                     wasCached: false
                 });
-
                 _forgeDebug.wi.NetworkNotify.setInitialContent(debug.id, debug.respText, "XHR");
-
                 _forgeDebug.wi.NetworkNotify.didFinishLoading(debug.id, debug.respTime);
             } catch (e) {}
         }
