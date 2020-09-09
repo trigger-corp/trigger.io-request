@@ -101,50 +101,57 @@
 
         if ([params objectForKey:@"boundary"] && [params objectForKey:@"boundary"] != [NSNull null]) {
             if ([params objectForKey:@"files"] && [params objectForKey:@"files"] != [NSNull null]) {
-                NSArray *files = [params objectForKey:@"files"];
+                NSArray *scriptObjects = [params objectForKey:@"files"];
 
-                unsigned long __block numfiles = [files count];
+                unsigned long __block numfiles = [scriptObjects count];
                 int index = -1;
 
-                for (NSDictionary* fileDict in files) {
-                    ForgeFile *file = [[ForgeFile alloc] initWithFile:fileDict];
+                for (NSDictionary* scriptObject in scriptObjects) {
+                    NSError *error = nil;
+                    ForgeFile *forgeFile = [ForgeFile withScriptObject:scriptObject error:&error];
+                    if (error != nil) {
+                        [task error:[error localizedDescription] type:@"UNEXPECTED_FAILURE" subtype:nil];
+                        return;
+                    }
 
                     index++;
                     // Handle file
-                    [file data:^(NSData *raw) {
-                        NSString *filename; // multipart filename
-                        NSString *name = [NSString stringWithFormat:@"%d", index]; // multipart field name
-                        NSString *specifiedFilename = [fileDict objectForKey:@"filename"]; // filename set by JS
-                        NSString *specifiedName = [fileDict objectForKey:@"name"]; // name set by JS
-                        BOOL videoUpload = [[[fileDict objectForKey:@"type"] description] isEqualToString:@"video"];
-
+                    [forgeFile contents:^(NSData *raw) {
+                        NSString *multipart_field_name = scriptObject[@"name"]
+                            ? scriptObject[@"name"]
+                            : [NSString stringWithFormat:@"%d", index];
+                        NSString *multipart_filename = [forgeFile.resource lastPathComponent];
+                        
+                        // TODO [forgeFile.resource lastPathComponent]; // filename set by JS
+                        /*NSString *specifiedFilename = [scriptObject objectForKey:@"filename"]; // filename set by JS
+                        NSString *specifiedName = [scriptObject objectForKey:@"name"]; // name set by JS
+                        BOOL videoUpload = [[[scriptObject objectForKey:@"type"] description] isEqualToString:@"video"];
                         if (specifiedFilename != nil) {
                             filename = specifiedFilename;
                         } else {
-                            filename = videoUpload? @"file.mov": @"file.jpg";
+                            filename = videoUpload ? @"file.mov" : @"file.jpg";
                         }
-
                         if (specifiedName != nil &&
                             !( !videoUpload && [@"Image" isEqualToString:specifiedName] ) &&
                             !( videoUpload && [@"Video" isEqualToString:specifiedName] )) {
                             // name has been set by user
                             name = specifiedName;
-                        }
+                        }*/
 
                         @synchronized(task) {
                             [payload appendData:[@"--" dataUsingEncoding:NSUTF8StringEncoding]];
-                            [payload appendData:[[params objectForKey:@"boundary"] dataUsingEncoding:NSUTF8StringEncoding]];
+                            [payload appendData:[params[@"boundary"] dataUsingEncoding:NSUTF8StringEncoding]];
                             [payload appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
                             [payload appendData:[@"Content-Disposition: form-data; " dataUsingEncoding:NSUTF8StringEncoding]];
-                            [payload appendData:[[NSString stringWithFormat:@"name=\"%@\"; filename=\"%@\"\r\n", name, filename] dataUsingEncoding:NSUTF8StringEncoding]];
-                            [payload appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", [file mimeType]]
+                            [payload appendData:[[NSString stringWithFormat:@"name=\"%@\"; filename=\"%@\"\r\n", multipart_field_name, multipart_filename] dataUsingEncoding:NSUTF8StringEncoding]];
+                            [payload appendData:[[NSString stringWithFormat:@"Content-Type: %@\r\n\r\n", forgeFile.mimeType]
                                                  dataUsingEncoding:NSUTF8StringEncoding]];
                             [payload appendData:raw];
                             [payload appendData:[@"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
                             numfiles--;
                             if (numfiles == 0) {
                                 [payload appendData:[@"--" dataUsingEncoding:NSUTF8StringEncoding]];
-                                [payload appendData:[[params objectForKey:@"boundary"] dataUsingEncoding:NSUTF8StringEncoding]];
+                                [payload appendData:[params[@"boundary"] dataUsingEncoding:NSUTF8StringEncoding]];
                                 [payload appendData:[@"--\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
                                 [request setHTTPBody:payload];
                                 sendRequest();
@@ -163,24 +170,30 @@
             [request setHTTPBody:payload];
             sendRequest();
         }
+        
     } else if ([[params objectForKey:@"fileUploadMethod"] isEqualToString:@"raw"]) {
         NSMutableData *payload = [NSMutableData dataWithLength:0];
-        NSArray *files = [params objectForKey:@"files"];
+        NSArray *scriptObjects = [params objectForKey:@"files"];
 
-        unsigned long __block numfiles = [files count];
+        unsigned long __block numfiles = [scriptObjects count];
 
-        for (NSDictionary* fileDict in files) {
-            ForgeFile *file = [[ForgeFile alloc] initWithFile:fileDict];
+        for (NSDictionary* scriptObject in scriptObjects) {
+            NSError *error = nil;
+            ForgeFile *forgeFile = [ForgeFile withScriptObject:scriptObject error:&error];
+            if (error != nil) {
+                [task error:[error localizedDescription] type:@"UNEXPECTED_FAILURE" subtype:nil];
+                return;
+            }
 
             // Set Content-Type header if needed
             if (![[request allHTTPHeaderFields] objectForKey:@"Content-Type"]) {
                 NSMutableDictionary *headersWithContentType = [[NSMutableDictionary alloc] initWithDictionary:[request allHTTPHeaderFields]];
-                [headersWithContentType setValue:[file mimeType] forKey:@"Content-Type"];
+                [headersWithContentType setValue:forgeFile.mimeType forKey:@"Content-Type"];
                 [request setAllHTTPHeaderFields:headersWithContentType];
             }
 
             // Handle file
-            [file data:^(NSData *raw) {
+            [forgeFile contents:^(NSData *raw) {
                 @synchronized(task) {
                     [payload appendData:raw];
                     numfiles--;
@@ -193,6 +206,7 @@
                 [task error:[error localizedDescription] type:@"EXPECTED_FAILURE" subtype:nil];
             }];
         }
+        
     } else {
         sendRequest();
     }
