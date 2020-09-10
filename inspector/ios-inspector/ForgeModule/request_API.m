@@ -122,22 +122,6 @@
                             : [NSString stringWithFormat:@"%d", index];
                         NSString *multipart_filename = [forgeFile.resource lastPathComponent];
                         
-                        // TODO [forgeFile.resource lastPathComponent]; // filename set by JS
-                        /*NSString *specifiedFilename = [scriptObject objectForKey:@"filename"]; // filename set by JS
-                        NSString *specifiedName = [scriptObject objectForKey:@"name"]; // name set by JS
-                        BOOL videoUpload = [[[scriptObject objectForKey:@"type"] description] isEqualToString:@"video"];
-                        if (specifiedFilename != nil) {
-                            filename = specifiedFilename;
-                        } else {
-                            filename = videoUpload ? @"file.mov" : @"file.jpg";
-                        }
-                        if (specifiedName != nil &&
-                            !( !videoUpload && [@"Image" isEqualToString:specifiedName] ) &&
-                            !( videoUpload && [@"Video" isEqualToString:specifiedName] )) {
-                            // name has been set by user
-                            name = specifiedName;
-                        }*/
-
                         @synchronized(task) {
                             [payload appendData:[@"--" dataUsingEncoding:NSUTF8StringEncoding]];
                             [payload appendData:[params[@"boundary"] dataUsingEncoding:NSUTF8StringEncoding]];
