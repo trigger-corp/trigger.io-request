@@ -12,7 +12,17 @@ forge["request"] = {
      * @param {function({message: string}=} error
      */
     "get": function (url, success, error) {
-        forge.request._get("request.httpx", url, success, error);
+        forge.request._ajax({
+            url: url,
+            dataType: "text",
+            success: success && function () {
+                try {
+                    arguments[0] = JSON.parse(arguments[0]);
+                } catch (e) {}
+                success.apply(this, arguments);
+            },
+            error: error
+        });
     },
 
     /**
@@ -23,39 +33,12 @@ forge["request"] = {
      * @param {Object} options Contains all relevant options
      */
     "ajax": function (options, success, error) {
-        forge.request._ajax("request.httpx", options, success, error);
-    },
-
-    /**
-     * Deprecated backend based on org.apache.http
-     */
-    "deprecated": {
-        "get": function (url, success, error) {
-            forge.request._get("request.ajax", url, success, error);
-        },
-        "ajax": function (options, success, error) {
-            forge.request._ajax("request.ajax", options, success, error);
-        }
+        forge.request._ajax(options, success, error);
     }
 };
 
 
 // - internal --------------------------------------------------------------
-
-forge["request"]["_get"] = function(backend, url, success, error) {
-    forge.request._ajax(backend, {
-        url: url,
-        dataType: "text",
-        success: success && function () {
-            try {
-                arguments[0] = JSON.parse(arguments[0]);
-            } catch (e) {}
-            success.apply(this, arguments);
-        },
-        error: error
-    });
-};
-
 
 /**
  * Generate query string
@@ -113,7 +96,7 @@ var generateURI = function (uri, queryData) {
     }
     newQuery += generateQueryString(queryData) + "&";
     // Remove trailing &
-    newQuery = newQuery.substring(0,newQuery.length-1);
+    newQuery = newQuery.substring(0, newQuery.length - 1);
     return uri + (newQuery ? "?" + newQuery : "");
 };
 
@@ -148,7 +131,7 @@ var generateMultipartString = function (obj, boundary) {
 };
 
 
-forge["request"]["_ajax"] = function (backend, options, success, error) {
+forge["request"]["_ajax"] = function (options, success, error) {
     var files = (options.files ? options.files : null);
     var fileUploadMethod = (options.fileUploadMethod ? options.fileUploadMethod : "multipart");
     var url = (options.url ? options.url : null);
@@ -274,7 +257,7 @@ forge["request"]["_ajax"] = function (backend, options, success, error) {
         forge.internal.addEventListener("request.progress." + progressId, progress);
     }
 
-    forge.internal.call(backend, {
+    forge.internal.call("request.httpx", {
         url: url,
         username: username,
         password: password,
