@@ -1,47 +1,41 @@
-# built application files
-*.apk
-*.ap_
-
-# files for the dex VM
-*.dex
-
-# Java class files
-*.class
-
-# generated files
-bin/
-gen/
-
-# Local configuration file (sdk path, etc)
-local.properties
-xcuserdata
-xcschemes
-
-# Eclipse project files
-.classpath
-.project
-
-# trigger stuff
-.lib/
-.trigger/
+.DS_Store
+.lib
+.trigger
 identity.json
-.hash
 inspector/an-inspector.*
+inspector/ios-inspector.*
+.hash
+.iml
+.gradle
+.idea
+
+inspector/ios-inspector/ForgeInspector
+inspector/ios-inspector/ForgeCore.framework
+inspector/ios-inspector/ForgeInspector.xcodeproj
+inspector/ios-inspector/ForgeCore.bundle
+inspector/ios-inspector/ForgeModule/build
+inspector/ios-inspector/ForgeModule/ForgeModule.xcodeproj/xcuserdata
+inspector/ios-inspector/build
+inspector/ios-inspector/dist
+
 inspector/an-inspector/ForgeInspector
+inspector/an-inspector/ForgeModule/.settings
+inspector/an-inspector/ForgeModule/libs
+inspector/an-inspector/ForgeModule/trigger-gen
 inspector/an-inspector/ForgeModule/.classpath
 inspector/an-inspector/ForgeModule/.project
-inspector/an-inspector/ForgeModule/.settings
 inspector/an-inspector/ForgeModule/AndroidManifest.xml
-inspector/an-inspector/ForgeModule/libs
 inspector/an-inspector/ForgeModule/project.properties
-inspector/an-inspector/ForgeModule/res
-inspector/an-inspector/ForgeModule/trigger-gen
-inspector/ios-inspector.*
-inspector/ios-inspector/ForgeCore.bundle/
-inspector/ios-inspector/ForgeCore.framework
-inspector/ios-inspector/ForgeInspector
-inspector/ios-inspector/ForgeInspector.xcodeproj
-inspector/ios-inspector/ForgeModule/ForgeModule-Prefix.pch
-inspector/ios-inspector/ForgeModule/build
-inspector/ios-inspector/build
-
+inspector/an-inspector/ForgeModule/ForgeModule.iml
+inspector/an-inspector/ForgeModule/build.gradle
+inspector/an-inspector/ForgeModule/build
+inspector/an-inspector/build.gradle
+inspector/an-inspector/gradle.properties
+inspector/an-inspector/gradlew
+inspector/an-inspector/gradlew.bat
+inspector/an-inspector/local.properties
+inspector/an-inspector/settings.gradle
+inspector/an-inspector/build
+inspector/an-inspector/gradle
+inspector/an-inspector/an-inspector.iml
+inspector/an-inspector/ForgeModule/res/.do_not_use
