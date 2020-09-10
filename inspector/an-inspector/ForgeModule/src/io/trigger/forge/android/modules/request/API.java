@@ -1,5 +1,6 @@
 package io.trigger.forge.android.modules.request;
 
+import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
 
 import com.google.common.base.Throwables;
@@ -21,6 +22,7 @@ import java.util.Map.Entry;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
+import io.trigger.forge.android.core.ForgeStorage;
 import okhttp3.Authenticator;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -41,7 +43,6 @@ import io.trigger.forge.android.core.ForgeTask;
 public class API {
 
     public static void httpx(final ForgeTask task, @ForgeParam("url") String url) {
-
         Uri uri = Uri.parse(url);
         if (uri == null || (!uri.getScheme().equals("https") && !uri.getScheme().equals("http"))) {
             task.error("Bad URL", "BAD_INPUT", null);
@@ -167,10 +168,9 @@ public class API {
         if (contentType == null && task.params.has("files") && task.params.has("fileUploadMethod") && task.params.get("fileUploadMethod").getAsString().equals("raw")) {
             JsonArray files = task.params.getAsJsonArray("files");
             if (files.size() > 0) {
-                ForgeFile file = new ForgeFile(ForgeApp.getActivity(), files.get(0).getAsJsonObject());
-                contentType = file.mimeType();
+                ForgeFile file = new ForgeFile(files.get(0).getAsJsonObject());
+                contentType = file.getMimeType();
             }
-
         }
         ForgeLog.d("Content type is: " + contentType);
 
@@ -206,8 +206,10 @@ public class API {
         if (fileUploadMethod.equals("raw") && params.has("files") && !params.get("files").isJsonNull()) {
             JsonArray files = params.getAsJsonArray("files");
             for (int i = 0; i < files.size(); i++) {
-                JsonObject file = files.get(i).getAsJsonObject();
-                uploadStreams.add(new ForgeFile(ForgeApp.getActivity(), file).fd().createInputStream());
+                JsonObject scriptObject = files.get(i).getAsJsonObject();
+                ForgeFile forgeFile = new ForgeFile(scriptObject);
+                AssetFileDescriptor fileDescriptor = ForgeStorage.getFileDescriptor(forgeFile);
+                uploadStreams.add(fileDescriptor.createInputStream());
             }
             return uploadStreams;
         }
@@ -224,32 +226,23 @@ public class API {
             if (params.has("files") && !params.get("files").isJsonNull()) {
                 JsonArray files = params.getAsJsonArray("files");
                 for (int i = 0; i < files.size(); i++) {
-                    JsonObject file = files.get(i).getAsJsonObject();
-                    ForgeFile forgeFile = new ForgeFile(ForgeApp.getActivity(), file);
+                    JsonObject scriptObject = files.get(i).getAsJsonObject();
+                    ForgeFile forgeFile = new ForgeFile(scriptObject);
+                    AssetFileDescriptor fileDescriptor = ForgeStorage.getFileDescriptor(forgeFile);
 
-                    String filename; // multipart filename
-                    String name = "" + i; // multipart field name
-                    Boolean videoUpload = file.has("type") && file.get("type").getAsString().equals("video");
-
-                    if (file.has("filename")) {
-                        filename = file.get("filename").getAsString();
-                    } else {
-                        filename = videoUpload ? "file.mp4" : "file.jpg";
-                    }
-
-                    if (file.has("name") && !(!videoUpload && file.get("name").getAsString().equals("Image")) && !(videoUpload && file.get("name").getAsString().equals("Video"))) {
-                        // name has been set by user
-                        name = file.get("name").getAsString();
-                    }
+                    String multipart_field_name = scriptObject.has("name")
+                                                ? scriptObject.get("name").getAsString()
+                                                : "" + i;
+                    String multipart_filename = ForgeStorage.getScriptPath(forgeFile).getFileName().toString();
 
                     StringBuilder sb = new StringBuilder();
                     sb.append("--").append(params.get("boundary").getAsString()).append("\r\n");
                     sb.append("Content-Disposition: form-data; ");
-                    sb.append("name=\"" + name + "\"; ");
-                    sb.append("filename=\"" + filename + "\"\r\n");
-                    sb.append("Content-Type: ").append(forgeFile.mimeType()).append("\r\n\r\n");
+                    sb.append("name=\"" + multipart_field_name + "\"; ");
+                    sb.append("filename=\"" + multipart_filename + "\"\r\n");
+                    sb.append("Content-Type: ").append(forgeFile.getMimeType()).append("\r\n\r\n");
                     uploadStreams.add(new ByteArrayInputStream(sb.toString().getBytes("UTF-8")));
-                    uploadStreams.add(new ForgeFile(ForgeApp.getActivity(), file).fd().createInputStream());
+                    uploadStreams.add(fileDescriptor.createInputStream());
                     uploadStreams.add(new ByteArrayInputStream("\r\n".getBytes("UTF-8")));
                 }
             }
@@ -258,13 +251,4 @@ public class API {
 
         return uploadStreams;
     }
-
-
-
-    /* - DEPRECATED ----------------------------------------------------------------------------- */
-
-	public static void ajax(final ForgeTask task, @ForgeParam("url") String url) {
-        io.trigger.forge.android.modules.request.deprecated.API.ajax(task, url);
-	}
-
 }
