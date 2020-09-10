@@ -1,5 +1,5 @@
 {
-    "changes": "* Update okhttp to 3.11.0\n* Update proguard rules to new recommendations",
+    "changes": "* Support new ForgeFile API's for iOS and Androind\n* Remove previously deprecated backend based on org.apache.http",
     "description": "Make cross domain ajax requests.\n\nThe requests module handles ajax requests using native libraries to prevent cross domain security issues, and allow for file uploads.",
     "min_platform_version": "v2.9.0",
     "namespace": "request",
