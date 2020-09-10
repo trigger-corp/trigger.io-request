@@ -12,10 +12,7 @@ var testsWithFixture = function (fixture) {
         forge.request.get("https://httpbin.org/get", function (data) {
             equal(data.url, "https://httpbin.org/get");
             start();
-        }, function () {
-            ok(false, "Ajax error callback");
-            start();
-        });
+        }, apiError("request.get"));
     });
 
     asyncTest("HTTPS forge.request.ajax GET", 1, function() {
@@ -26,10 +23,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.url, "https://httpbin.org/get");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -44,10 +38,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.user, "username");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -62,10 +53,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.user, "username");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -75,13 +63,10 @@ var testsWithFixture = function (fixture) {
             type: "DELETE",
             success: function (data) {
                 data = JSON.parse(data);
-                equal(data.url, "https://httpbin.org/delete");
+                equal(data.url, "http://httpbin.org/delete");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -94,10 +79,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.url, "https://httpbin.org/delete");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -112,10 +94,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.args.test, "Hello");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -130,10 +109,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.args.test, "Hello");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -149,10 +125,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.args.abc, "data");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -168,10 +141,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.args.abc, "data");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -184,10 +154,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.headers["X-Test"], "hello");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -200,10 +167,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.headers["X-Test"], "hello");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -214,10 +178,7 @@ var testsWithFixture = function (fixture) {
                 ok(true, "Success");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -230,10 +191,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.cookies.k2, "v2");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -244,10 +202,7 @@ var testsWithFixture = function (fixture) {
                 ok(true, "Success");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -260,10 +215,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.cookies.k2, "v2");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -274,10 +226,7 @@ var testsWithFixture = function (fixture) {
                 ok(true, "Success");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -290,10 +239,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.cookies.sk2, "v2");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -304,10 +250,7 @@ var testsWithFixture = function (fixture) {
                 ok(true, "Success");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -320,10 +263,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.cookies.sk2, "v2");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -346,10 +286,7 @@ var testsWithFixture = function (fixture) {
                     }
                 });
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -514,10 +451,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.POST_test, "hello", "Check POST data");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -533,10 +467,7 @@ var testsWithFixture = function (fixture) {
                 equal(data["HTTP_X_TEST"], "hello", "Check POST header");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -551,10 +482,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.RAW_POST, JSON.stringify({test: "hello"}), "Check raw POST data");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -569,10 +497,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.RAW_POST, JSON.stringify({test: "hello"}), "Check raw POST data");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -584,10 +509,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.test, "data", "Check parsed value");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -599,10 +521,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.replace(/\n/g,""), "{\"test\": \"data\"}", "Check parsed value");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -614,10 +533,7 @@ var testsWithFixture = function (fixture) {
                 equal($(data.firstChild).text(), "data", "Check parsed value");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -629,10 +545,7 @@ var testsWithFixture = function (fixture) {
                 equal(data.replace(/\n/g,""), "<test>data</test>", "Check parsed value");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -672,10 +585,7 @@ var testsWithFixture = function (fixture) {
                 ok(true, "Success");
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
@@ -809,26 +719,7 @@ var testsWithFixture = function (fixture) {
                 equal(headers["Content-Type"].startsWith("text/html"), true);
                 start();
             },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
-        });
-    });
-
-    asyncTest("Test SNI against feelingrestful.com", 1, function() {
-        forge.request.ajax({
-            url: "https://feelingrestful.com",
-            type: "HEAD",
-            success: function (data, headers) {
-                forge.logging.log("GOT HEADERS: " + JSON.stringify(headers));
-                equal(headers["Content-Type"].startsWith("text/html"), true);
-                start();
-            },
-            error: function () {
-                ok(false, "Ajax error callback");
-                start();
-            }
+            error: apiError("request.ajax")
         });
     });
 
