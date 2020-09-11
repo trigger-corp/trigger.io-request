@@ -7,7 +7,7 @@
 //
 
 #import "request_API.h"
-#import "request_ProgressDelegate.h"
+#import "request_Delegate.h"
 #import "request_EventListener.h"
 
 
@@ -34,14 +34,12 @@
 
     // Create session
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = nil;
-    __block request_ProgressDelegate *delegate =  nil;
-    if ([params objectForKey:@"progress"] && [params objectForKey:@"progress"] != [NSNull null]) {
-        delegate = [[request_ProgressDelegate alloc] initWithTask:task];
-        session = [NSURLSession sessionWithConfiguration:configuration delegate:delegate delegateQueue:[NSOperationQueue mainQueue]];
-    } else {
-        session = [NSURLSession sessionWithConfiguration:configuration];
-    }
+    configuration.HTTPCookieAcceptPolicy = NSHTTPCookieAcceptPolicyAlways;
+    configuration.HTTPShouldSetCookies = YES;
+
+    // Hook up session delegate
+    __block request_Delegate *delegate = [request_Delegate withTask:task];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:delegate delegateQueue:[NSOperationQueue mainQueue]];
 
     // Set authorization header if requested
     if (([params objectForKey:@"username"] && [params objectForKey:@"username"] != [NSNull null]) || ([params objectForKey:@"password"] && [params objectForKey:@"password"] != [NSNull null])) {
@@ -55,9 +53,6 @@
     // Helper to process request once configuration is complete
     void (^sendRequest)(void) = ^() {
         NSURLSessionDataTask *client = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            if (delegate != nil) {
-                [delegate releaseDelegate];
-            }
 
             // parse response
             long statusCode = 0;
@@ -74,6 +69,9 @@
                 }
             }
 
+            // share cookies (if any) with WebView
+            [request_Delegate saveCookiesFromResponse:(NSHTTPURLResponse*)response];
+
             // handle errors
             if (error != nil || statusCode < 200 || statusCode > 299) {
                 NSMutableDictionary *errorObj = [[NSMutableDictionary alloc] init];
@@ -89,8 +87,11 @@
             [task success:@{@"response": responseString,
                             @"headers":  responseHeaders}];
 
+            if (delegate != nil) {
+                [delegate releaseDelegate];
+            }
         }];
-        
+
         [client resume];
     };
 
@@ -121,7 +122,7 @@
                             ? scriptObject[@"name"]
                             : [NSString stringWithFormat:@"%d", index];
                         NSString *multipart_filename = [forgeFile.resource lastPathComponent];
-                        
+
                         @synchronized(task) {
                             [payload appendData:[@"--" dataUsingEncoding:NSUTF8StringEncoding]];
                             [payload appendData:[params[@"boundary"] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -154,7 +155,7 @@
             [request setHTTPBody:payload];
             sendRequest();
         }
-        
+
     } else if ([[params objectForKey:@"fileUploadMethod"] isEqualToString:@"raw"]) {
         NSMutableData *payload = [NSMutableData dataWithLength:0];
         NSArray *scriptObjects = [params objectForKey:@"files"];
@@ -190,7 +191,7 @@
                 [task error:[error localizedDescription] type:@"EXPECTED_FAILURE" subtype:nil];
             }];
         }
-        
+
     } else {
         sendRequest();
     }
