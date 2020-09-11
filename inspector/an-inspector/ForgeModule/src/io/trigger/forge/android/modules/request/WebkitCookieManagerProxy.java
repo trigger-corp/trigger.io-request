@@ -1,6 +1,8 @@
 package io.trigger.forge.android.modules.request;
 
+import android.os.Build;
 import android.util.Log;
+import android.webkit.CookieSyncManager;
 
 import java.io.IOException;
 import java.net.CookieManager;
@@ -13,13 +15,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.trigger.forge.android.core.ForgeApp;
+import io.trigger.forge.android.core.ForgeLog;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 
 public class WebkitCookieManagerProxy extends CookieManager implements CookieJar {
-    private android.webkit.CookieManager webkitCookieManager;
-
     private static final String TAG = WebkitCookieManagerProxy.class.getSimpleName();
 
     public WebkitCookieManagerProxy() {
@@ -28,7 +30,6 @@ public class WebkitCookieManagerProxy extends CookieManager implements CookieJar
 
     WebkitCookieManagerProxy(CookieStore store, CookiePolicy cookiePolicy) {
         super(null, cookiePolicy);
-        this.webkitCookieManager = android.webkit.CookieManager.getInstance();
     }
 
     @Override
@@ -51,7 +52,21 @@ public class WebkitCookieManagerProxy extends CookieManager implements CookieJar
 
             // process each of the headers
             for (String headerValue : responseHeaders.get(headerKey)) {
-                webkitCookieManager.setCookie(url, headerValue);
+                android.webkit.CookieManager webkitCookieManager = android.webkit.CookieManager.getInstance();
+                webkitCookieManager.setAcceptCookie(true);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ForgeApp.getActivity().runOnUiThread(() -> {
+                        webkitCookieManager.setAcceptThirdPartyCookies(ForgeApp.getActivity().webView, true);
+                        webkitCookieManager.setCookie(url, headerValue, value -> {
+                            webkitCookieManager.flush();
+                            String cookie = webkitCookieManager.getCookie(url);
+                            ForgeLog.d("Set cookie: " + cookie);
+                        });
+                    });
+                } else {
+                    webkitCookieManager.setCookie(url, headerValue);
+                    CookieSyncManager.getInstance().sync();
+                }
             }
         }
     }
@@ -69,6 +84,7 @@ public class WebkitCookieManagerProxy extends CookieManager implements CookieJar
         Map<String, List<String>> res = new java.util.HashMap<String, List<String>>();
 
         // get the cookie
+        android.webkit.CookieManager webkitCookieManager = android.webkit.CookieManager.getInstance();
         String cookie = webkitCookieManager.getCookie(url);
 
         // return it
