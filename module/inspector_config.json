@@ -1,6 +1,7 @@
 {
     "modules": {
         "file": {
+            "disabled": true,
             "version": "2.25",
             "config": {
                 "usage_description": "We will make an attempt to steal your cookies."
@@ -22,6 +23,11 @@
                     "NSExceptionRequiresForwardSecrecy": true
                 }
             ]
+        }
+    },
+    "core": {
+        "android": {
+            "remote_debugging": true
         }
     },
     "flags": {
