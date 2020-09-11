@@ -1,6 +1,7 @@
 [
     { "do": { "add_ios_system_framework": "Security.framework" } },
     { "do": { "add_ios_system_framework": "CoreServices.framework" } },
+    { "do": { "add_ios_system_framework": "UniformTypeIdentifiers.framework" } },
     { "do": { "set_in_info_plist": {
         "key": "NSAppTransportSecurity.NSAllowsArbitraryLoads",
         "value": "{{modules.request.config.disable_ats}}"
