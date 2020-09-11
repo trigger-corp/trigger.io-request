@@ -15,7 +15,6 @@ if (forge.file) {
                 files: [file],
                 fileUploadMethod: "raw",
                 success: function (data) {
-                    forge.logging.log("RESPONSE: " + JSON.stringify(data));
                     equal(data, "OK", "Success");
                     start();
                 },
@@ -40,8 +39,8 @@ if (forge.file) {
                 url: "https://ops.trigger.io/75d92dce/tests/upload_silent.php",
                 files: files,
                 success: function (data) {
-                    forge.logging.log("Response: " + JSON.stringify(data.headers));
-                    ok(true, "Success");
+                    forge.logging.log("RESPONSE: " + data);
+                    equal(data, "OK", "Success");
                     start();
                 },
                 error: function (e) {
@@ -78,7 +77,7 @@ asyncTest("File upload - progress", 1, function() {
                 start();
             },
             progress: function (progress) {
-                askQuestion("Progress: "+Math.round(100*progress.done/progress.total)+"%");
+                askQuestion("Progress: " + Math.round(100 * progress.done / progress.total) + "%");
             }
         });
     }, function (e) {
@@ -88,22 +87,6 @@ asyncTest("File upload - progress", 1, function() {
 });
 
 
-
-asyncTest("Test cookie persisted across runs", 1, function () {
-    forge.request.ajax({
-        url: "https://httpbin.org/cookies",
-        success: function (data) {
-            forge.logging.log("GOT: " + data);
-            data = JSON.parse(data);
-            equal(data.cookies.persisted, "cookie");
-            start();
-        },
-        error: function (e) {
-            ok(false, "forge.request.ajax failed: " + JSON.stringify(e));
-            start();
-        }
-    });
-});
 
 
 /*
@@ -117,7 +100,7 @@ asyncTest("Background file download", 1, function() {
                     start();
                 },
                 progress: function (progress) {
-                    askQuestion("Progress: "+Math.round(100*progress.done/progress.total)+"%");
+                    askQuestion("Progress: " + Math.round(100 * progress.done / progress.total) + "%");
                 }
             }, function (data) {
                 forge.logging.log("TODO: " + JSON.stringify(data));

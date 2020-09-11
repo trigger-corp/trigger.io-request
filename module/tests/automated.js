@@ -7,7 +7,6 @@ forge.tools.getFileFromSourceDirectory("fixtures/request/test.txt", function (fi
 });
 
 var testsWithFixture = function (fixture) {
-
     asyncTest("HTTPS forge.request.get", 1, function() {
         forge.request.get("https://httpbin.org/get", function (data) {
             equal(data.url, "https://httpbin.org/get");
@@ -182,6 +181,19 @@ var testsWithFixture = function (fixture) {
         });
     });
 
+    asyncTest("Test cookie persisted across runs", 1, function () {
+        forge.request.ajax({
+            url: "https://httpbin.org/cookies",
+            success: function (data) {
+                forge.logging.log("GOT: " + data);
+                data = JSON.parse(data);
+                equal(data.cookies.persisted, "cookie");
+                start();
+            },
+            error: apiError("request.ajax")
+        });
+    });
+
     asyncTest("HTTP Check cookie data", 2, function() {
         forge.request.ajax({
             url: "http://httpbin.org/cookies",
@@ -267,28 +279,48 @@ var testsWithFixture = function (fixture) {
         });
     });
 
-    asyncTest("Test cookie sharing with webview", 1, function () {
-        $.ajax({
-            url: "https://httpbin.org/cookies/set?external=cookie",
+    // disable cookie sharing tests until the cookie-pocalypse is over.
+    /*asyncTest("Test sharing forge.request cookie with webview", 1, function () {
+        forge.request.ajax({
+            url: "https://httpbin.org/cookies/set?external=cookie1",
             success: function (data) {
-                forge.logging.log("$.ajax got: " + JSON.stringify(data));
-                forge.request.ajax({
+                forge.logging.log("forge.request.ajax got: " + data);
+                $.ajax({
                     url: "https://httpbin.org/cookies",
+                    dataType: "text",
                     success: function (data) {
-                        forge.logging.log("forge.request got: " + data);
+                        forge.logging.log("$.ajax got: " + data);
                         data = JSON.parse(data);
-                        equal(data.cookies.external, "cookie");
+                        equal(data.cookies.external, "cookie1");
                         start();
                     },
-                    error: function () {
-                        ok(false, "Ajax error callback");
-                        start();
-                    }
+                    error: apiError("$.ajax")
                 });
             },
             error: apiError("request.ajax")
         });
     });
+
+    asyncTest("Test sharing webview cookie with forge.request", 1, function () {
+        $.ajax({
+            url: "https://httpbin.org/cookies/set?external=cookie2",
+            dataType: "text",
+            success: function (data) {
+                forge.logging.log("$.ajax got: " + data);
+                forge.request.ajax({
+                    url: "https://httpbin.org/cookies",
+                    success: function (data) {
+                        forge.logging.log("forge.request got: " + data);
+                        data = JSON.parse(data);
+                        equal(data.cookies.external, "cookie2");
+                        start();
+                    },
+                    error: apiError("request.ajax")
+                });
+            },
+            error: apiError("$.ajax")
+            });
+            });*/
 
 
     if ("inspector" in forge) {
@@ -428,7 +460,6 @@ var testsWithFixture = function (fixture) {
             });
         });
     }
-
 
     // URL to a page which returns REQUEST_METHOD, HTTP headers, COOKIE, GET and POST data as a JSON object.
     var testRoot = "http://ops.trigger.io/75d92dce/tests/";
